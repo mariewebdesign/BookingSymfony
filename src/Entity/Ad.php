@@ -8,9 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity(repositoryClass=AdRepository::class)
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(
+ * fields={"title"},
+ * message = "Une autre annonce a déjà ce titre, veuillez en changer"
+ * )
  */
 class Ad
 {
@@ -23,6 +30,7 @@ class Ad
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=10,max=255,minMessage="Le titre doit faire + de 10 caractères",maxMessage ="Votre titre est trop long. Il ne doit pas faire + de 255 caractères")
      */
     private $title;
 
@@ -38,11 +46,13 @@ class Ad
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=30,minMessage="Merci de mettre au moins 30 caractères")
      */
     private $introduction;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=100,minMessage="Merci de mettre au moins 100 caractères")
      */
     private $content;
 
@@ -57,7 +67,8 @@ class Ad
     private $rooms;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ad")
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad",orphanRemoval=true)
+     * @Assert\Valid()
      */
     private $images;
 
