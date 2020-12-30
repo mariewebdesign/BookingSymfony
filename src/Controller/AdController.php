@@ -67,6 +67,7 @@ class AdController extends AbstractController
                 $em->persist($image);
             }
 
+            $ad->setAuthor($this->getUser());
             $em->persist($ad);
             
             $em->flush();
@@ -123,6 +124,8 @@ class AdController extends AbstractController
                 // on sauvegarde les images
                 $em->persist($image);
             }
+
+     
             $em->persist($ad);           
             $em->flush();
 
