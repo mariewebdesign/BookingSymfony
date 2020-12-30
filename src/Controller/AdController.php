@@ -6,11 +6,13 @@ use App\Entity\Ad;
 use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AdController extends AbstractController
 {
@@ -34,7 +36,7 @@ class AdController extends AbstractController
     /**
   * Permet de créer une annonce
   * @Route("ads/new",name="ads_create")
-
+  * @IsGranted("ROLE_USER")
   * @return response
   */
     public function create(Request $request){
@@ -102,6 +104,7 @@ class AdController extends AbstractController
     /**
     * Permet d'éditer et de modifier un article
     * @Route("/ads/{slug}/edit",name="ads_edit")
+    * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()",message="Cet annonce ne vous appartient pas, vous ne pouvez pas la modifier")
     * @return Response
     */
 
@@ -109,8 +112,6 @@ class AdController extends AbstractController
 
         $form = $this->createForm(AnnonceType::class,$ad);
         $form->handleRequest($request);
-
- 
 
         $em = $this->getDoctrine()->getManager();
 
@@ -137,6 +138,24 @@ class AdController extends AbstractController
         return $this->render('ad/edit.html.twig',['form'=>$form->createView(),'ad'=>$ad]);
 
 
+    }
+
+    /**
+     * Suppression de l'annonce
+     * @Route("/ads/{slug}/delete",name="ads_delete")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()",message="Vous n'avez pas le droit d'accéder à cette page !")
+     * @param Ad $ad
+     * @return Response
+     */
+    public function delete(Ad $ad){
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $em->remove($ad);
+        $em->flush();
+        $this->addFlash("success","L'annonce <em>{$ad->getTitle()}</em> a bien été supprimée");
+
+        return $this->redirectToRoute("account_home");
     }
 
 }
