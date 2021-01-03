@@ -1,4 +1,8 @@
-body{background-color: #b4afaf;}
+body{background-color: #dad3d3;}
+
+a{color:indianred;}
+a:hover{color:indianred;}
+
 .container{margin-top:1.2em;}
 
 .ad-title{background-size:cover;background-position:center center;padding:1em;}
@@ -10,6 +14,8 @@ body{background-color: #b4afaf;}
 .avatar{width:128px;height:128px;border-radius:50%}
 .avatar-medium{max-width:64px;max-height:64px;}
 .avatar-small{max-width:32px;max-height:32px;}
+
+.datepicker table tr td.disabled, .datapicker table tr td.disabled:hover{color:indianred!important;text-decoration:line-through}
 
 footer{position:fixed;bottom:0;width:100%;color:#fcfcfc}
 
