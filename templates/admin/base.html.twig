@@ -8,12 +8,13 @@
             <link href="/css/bootstrap.min.css" rel="stylesheet">
             <script src="https://kit.fontawesome.com/b0955d7c3d.js" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="/css/app.css">
+             <link rel="stylesheet" href="/css/admin.css">
         {% endblock %}
         <script src="/js/jquery.min.js"></script>
 
     </head>
     <body>
-        {% include 'inc/header.html.twig' %}
+        {% include 'admin/inc/header.html.twig' %}
 
         {% for label,messages in app.flashes %}
             <div class="container">
@@ -35,7 +36,7 @@
 
 
       
-        {% include 'inc/footer.html.twig' %}
+        {% include 'admin/inc/footer.html.twig' %}
 
         {% block javascripts %}  {% endblock %}
     </body>

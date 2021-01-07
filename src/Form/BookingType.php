@@ -7,7 +7,7 @@ use App\Form\ApplicationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\DataTransformer\FrToDatetimeTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 

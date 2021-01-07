@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="efr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Administration</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/b0955d7c3d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+    <main class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card bg-light">
+                    <div class="card-header">
+                        <h1 class="text-center">Booking</h1>
+                        <h4 class="card-title text-center"><i class="fas fa-lock"></i> Connexion à l'administration</h4>
+                        <div class="card-body">
+
+                            {% if hasError %}
+                                <div class="alert alert-warning">
+                                    <p>Les informations fournies sont erronées.</p>
+                                </div>
+                            {% endif %}
+                            <form method="post">
+
+                                <div class="form-group">
+                                    <label for="username">Email</label>
+                                    <input type="email" name="_username" id="username" placeholder="Votre email" class="form-control" value="{{username}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Mot de passe</label>
+                                    <input type="password" name="_password" id="password" placeholder="Votre mot de passe" class="form-control">
+                                </div>
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-lock-open"></i> Connexion</button>
+                                    <a href="{{path('homepage')}}" class="btn btn-link">Retour sur le site</a>
+                                </div>
+                            
+                            </form>
+                        </div>
+                    </div>
+                </div> 
+            
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
+

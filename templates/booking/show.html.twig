@@ -37,7 +37,7 @@
                         <dt class="col-md-4">Montant total :</dt>
                         <dd class="col-md-8">{{booking.amount}}</dd>
                         <dt class="col-md-4">Commentaire :</dt>
-                        <dd class="col-md-8">{{booking.comment}}</dd>
+                        <dd class="col-md-8">{{booking.comment | default('Aucun commentaire')}}</dd>
                     </dl>
                     <h3 class="alert alert-heading">Propriétaire du bien</h3>
                     <div class="row">
@@ -56,16 +56,41 @@
                         </div>
                     
                     </div>
+                    <div class="alert alert-light" id="comment">
+                                 
+                        
+
+                           {% if date() > date(booking.endDate) %}
+                                    {% set comment = booking.ad.commentFromAuthor(app.user) %}
+                                    {% if comment is not null %}
+                                        <h3 class="alert alert-heading">Votre commentaire :</h3>
+                                        <blockquote>{{comment.content}}</blockquote>
+                                        <strong>Note :{% include 'inc/rating.html.twig' with {'rating' : comment.rating} %}</strong>
+                                    {% else %}
+                                        <h3 class="alert alert-heading">Votre avis nous intéresse !</h3>
+                                        {{form_start(form)}}
+                                        {{form_widget(form)}}
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        {{form_end(form)}}
+                                    {% endif %}
+                            {% else %}
+                                <h3 class="alert alert-heading">Votre avis nous intéresse !</h3>
+                                <p class="alert alert-warning">Vous ne pourrez pas noter cette annonce tant que votre séjour ne sera pas terminé.
+                                <br>Revenez une fois votre séjour terminé.</p>
+                            {% endif %}
+           
+                    
+                    </div>
                 </div>
             </div>
             <div class="col">
                 <div class="alert alert-light">
-                <h3 class="alert-heading">Votre hébergement</h3>
-                <h4> <a href="{{ path('ads_single',{'slug':booking.ad.slug}) }}" class="btn btn-outline-primary">{{booking.ad.title}}</a></h4>
-                <img src="{{ booking.ad.coverImage }}" alt="Image de couverture de {{ booking.ad.title}}" class="img-fluid">
-                {{booking.ad.content |raw}}
-                <a href="{{ path('ads_single',{'slug':booking.ad.slug}) }}" class="btn btn-outline-primary">Détails</a>
-            </div>
+                    <h3 class="alert-heading">Votre hébergement</h3>
+                    <h4> <a href="{{ path('ads_single',{'slug':booking.ad.slug}) }}" class="btn btn-outline-primary">{{booking.ad.title}}</a></h4>
+                    <img src="{{ booking.ad.coverImage }}" alt="Image de couverture de {{ booking.ad.title}}" class="img-fluid">
+                    {{booking.ad.content |raw}}
+                    <a href="{{ path('ads_single',{'slug':booking.ad.slug}) }}" class="btn btn-outline-primary">Détails</a>
+                </div>
             </div>
 
         </div>
