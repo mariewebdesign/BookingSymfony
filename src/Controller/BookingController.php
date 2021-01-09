@@ -10,6 +10,7 @@ use App\Form\BookingType;
 use App\Form\CommentType;
 use Faker\Provider\DateTime;
 
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,7 +27,7 @@ class BookingController extends AbstractController
      * 
      * @return Response
      */
-    public function book(Ad $ad,Request $request)
+    public function book(Ad $ad,Request $request,ObjectManager $manager)
 
     {
         $booking = new Booking();
@@ -34,8 +35,6 @@ class BookingController extends AbstractController
         $form = $this->createForm(BookingType::class,$booking);
 
         $form->handleRequest($request);
-
-        $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted() && $form->isValid()){
 
@@ -52,8 +51,8 @@ class BookingController extends AbstractController
             else{
 
 
-            $em->persist($booking);
-            $em->flush();
+            $manager->persist($booking);
+            $manager->flush();
 
             return $this->redirectToRoute("booking_show",['id'=>$booking->getId(),'alert'=>true]);
             }
@@ -73,14 +72,13 @@ class BookingController extends AbstractController
      * @param Booking $booking
      * @return Response
      */
-    public function show(Booking $booking, Request $request){
+    public function show(Booking $booking, Request $request,ObjectManager $manager){
 
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class,$comment);
 
         $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted() && $form->isValid()){
 
@@ -88,8 +86,8 @@ class BookingController extends AbstractController
                     ->setAuthor($this->getUser())
                     ;
 
-            $em->persist($comment);
-            $em->flush();
+            $manager->persist($comment);
+            $manager->flush();
 
             $this->addFlash("success","Votre commentaire a bien été enregistré.");
         }

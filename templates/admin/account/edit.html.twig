@@ -1,0 +1,33 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Edition des utilisateurs{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+
+<main class="container mt-5">
+
+
+    <div class="row">
+        {{form_start(form)}}
+        <h1 class="col text-center mb-5">Modification de l'utilisateur "{{user.fullName}}"</h1>
+        <div class="col-md-8 offset-2">
+            {{form_widget(form)}}
+        </div>
+    
+        <div class="col-md-12 text-center mb-5">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Enregistrer</button>
+        </div>
+        {{form_end(form)}}
+
+        <div class="col-md-8 offset-2 mb-5">
+             <a class="dropdown-item" href="{{ path('account_bookings') }}">Réservations de "{{user.fullName}}"</a>    
+        </div>
+    </div>
+</main>
+            
+{% endblock %}
+
+
+

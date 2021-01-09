@@ -6,6 +6,7 @@ use App\Entity\Ad;
 use App\Entity\Image;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,13 +40,11 @@ class AdController extends AbstractController
   * @IsGranted("ROLE_USER")
   * @return response
   */
-    public function create(Request $request){
+    public function create(Request $request,ObjectManager $manager){
 
         // fabricant de formulaire : FORMBUILDER
 
         $ad = new Ad();
-
-        $em = $this->getDoctrine()->getManager();
 
         // on lance la fabrication et la configuration de notre formulaire
         $form = $this->createForm(AnnonceType::class,$ad);
@@ -66,13 +65,13 @@ class AdController extends AbstractController
 
                 // on sauvegarde les images
 
-                $em->persist($image);
+                $manager->persist($image);
             }
 
             $ad->setAuthor($this->getUser());
-            $em->persist($ad);
+            $manager->persist($ad);
             
-            $em->flush();
+            $manager->flush();
 
             $this->addFlash('success',"Annonce <strong>{$ad->getTitle()}</strong> créée avec succès");
 
@@ -108,12 +107,10 @@ class AdController extends AbstractController
     * @return Response
     */
 
-    public function edit(Ad $ad,Request $request){
+    public function edit(Ad $ad,Request $request,ObjectManager $manager){
 
         $form = $this->createForm(AnnonceType::class,$ad);
         $form->handleRequest($request);
-
-        $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted() && $form->isValid()){
 
@@ -123,12 +120,12 @@ class AdController extends AbstractController
                 $image->setAd($ad);
 
                 // on sauvegarde les images
-                $em->persist($image);
+                $manager->persist($image);
             }
 
      
-            $em->persist($ad);           
-            $em->flush();
+            $manager->persist($ad);           
+            $manager->flush();
 
             $this->addFlash("success","les modifications ont été faites !");
 
@@ -147,12 +144,10 @@ class AdController extends AbstractController
      * @param Ad $ad
      * @return Response
      */
-    public function delete(Ad $ad){
+    public function delete(Ad $ad,ObjectManager $manager){
         
-        $em = $this->getDoctrine()->getManager();
-
-        $em->remove($ad);
-        $em->flush();
+        $manager->remove($ad);
+        $manager->flush();
         $this->addFlash("success","L'annonce <em>{$ad->getTitle()}</em> a bien été supprimée");
 
         return $this->redirectToRoute("account_home");

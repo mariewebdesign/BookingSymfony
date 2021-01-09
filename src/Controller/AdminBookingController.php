@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Booking;
+use App\Service\Pagination;
 use App\Form\AdminBookingType;
-use App\Repository\BookingRepository;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,14 +16,20 @@ class AdminBookingController extends AbstractController
 {
     /**
      * Affichage de la liste des réservations
-     * @Route("/admin/bookings", name="admin_bookings_list")
+     * @Route("/admin/bookings/{page<\d+>?1}", name="admin_bookings_list")
      * 
      * @return Response
      */
-    public function index(BookingRepository $repo)
+    public function index(Pagination $paginationService,$page)
     {
+        $paginationService->setEntityClass(Booking::class)
+                          ->setPage($page)
+                          //->setRoute('admin_bookings_list')
+                            ;
+
+
         return $this->render('admin/booking/index.html.twig', [
-            'bookings' => $repo->findAll()
+            'pagination' =>$paginationService
         ]);
     }
 
@@ -32,12 +40,10 @@ class AdminBookingController extends AbstractController
      * @param Booking $booking
      * @return Response
      */
-    public function delete(Booking $booking){
+    public function delete(Booking $booking,ObjectManager $manager){
 
-        $em = $this->getDoctrine()->getManager();
-
-        $em->remove($booking);
-        $em->flush();
+        $manager->remove($booking);
+        $manager->flush();
 
         $this->addFlash("success","La réservation n°{$booking->getId()} a bien été supprimé !");
 
@@ -53,21 +59,19 @@ class AdminBookingController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(booking $booking, Request $request){
+    public function edit(booking $booking, Request $request,ObjectManager $manager){
 
         $form = $this->createForm(AdminBookingType::class,$booking);
 
         $form->handleRequest($request);
-
-        $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted() && $form->isValid()){
 
            // $booking->setAmount($booking->getAd()->getPrice() * $booking->getDuration());
             $booking->setAmount(0);
 
-            $em->persist($booking);
-            $em->flush();
+            $manager->persist($booking);
+            $manager->flush();
 
             $this->addFlash('success',"La réservation n°{$booking->getId()} a bien été modifiée");
             return $this->redirectToRoute('admin_bookings_list');

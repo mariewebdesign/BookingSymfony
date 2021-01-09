@@ -8,6 +8,7 @@ use App\Entity\PasswordUpdate;
 use App\Form\RegistrationType;
 use App\Form\PasswordUpdateType;
 use Symfony\Component\Form\FormError;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,15 +52,13 @@ class AccountController extends AbstractController
      *
      * @return Response
      */
-    public function register(Request $request,UserPasswordEncoderInterface $encoder){
+    public function register(Request $request,UserPasswordEncoderInterface $encoder,ObjectManager $manager){
 
         $user = new User();
 
         $form = $this->createForm(RegistrationType::class,$user);
 
         $form->handleRequest($request);
-
-        $em = $this->getDoctrine()->getManager();
 
         if($form->isSubmitted() && $form->isValid()){
 
@@ -69,8 +68,8 @@ class AccountController extends AbstractController
 
             $user->setHash($hash);
 
-            $em->persist($user);
-            $em->flush();
+            $manager->persist($user);
+            $manager->flush();
 
             $this->addFlash("success","Votre compte a bien été créé");
 
@@ -91,9 +90,7 @@ class AccountController extends AbstractController
      *
      * @return Response
      */
-    public function profile(Request $request){
-
-        $em = $this->getDoctrine()->getManager();
+    public function profile(Request $request,ObjectManager $manager){
 
         $user = $this->getUser(); // récupère les données de l'utilisateur connecté
 
@@ -103,8 +100,8 @@ class AccountController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $em->persist($user);
-            $em->flush();
+            $manager->persist($user);
+            $manager->flush();
 
             $this->addFlash("success","Les informations de votre profil ont bien été modifiées");
 
@@ -121,9 +118,7 @@ class AccountController extends AbstractController
      * 
      * @return Response
      */
-    public function updatePassword(Request $request,UserPasswordEncoderInterface $encoder){
-
-        $em = $this->getDoctrine()->getManager();
+    public function updatePassword(Request $request,UserPasswordEncoderInterface $encoder,ObjectManager $manager){
 
         $passwordUpdate = new PasswordUpdate();
 
@@ -156,8 +151,8 @@ class AccountController extends AbstractController
                 $user->setHash($hash);
 
                 //on enregistre
-                $em->persist($user);
-                $em->flush();
+                $manager->persist($user);
+                $manager->flush();
 
                 // on ajoute un message
 
