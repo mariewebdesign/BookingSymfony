@@ -44,7 +44,7 @@ class Pagination{
 
     public function setEntityClass($entityClass){
 
-        // ma donnée entityClass = donnée qui va m'être envoyé
+        // ma donnée entityClass = donnée qui va m'être envoyée
 
         $this->entityClass = $entityClass;
 

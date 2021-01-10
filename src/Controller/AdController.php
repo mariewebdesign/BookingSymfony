@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Entity\Image;
 use App\Form\AnnonceType;
+use App\Service\Pagination;
 use App\Repository\AdRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,18 +20,22 @@ class AdController extends AbstractController
 {
     /**
      * Permet d'afficher une liste d'annonces
-     * @Route("/ads", name="ads_list")
+     * @Route("/ads/{page<\d+>?1}", name="ads_list")
      * @return Response
      */
-    public function index(AdRepository $repo){
+    public function index(Pagination $paginationService,$page){
 
         // via $repo, on va aller chercher toutes les annonces via la méthode findAll
 
-        $ads = $repo->findAll();
+        $paginationService->setEntityClass(Ad::class)
+                          ->setPage($page)
+       
+          ;
+
         
         return $this->render('ad/index.html.twig', [
             'controller_name' => 'Nos annonces',
-            'ads'=>$ads
+            'pagination'=>$paginationService
         ]);
     }
    

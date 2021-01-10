@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookingController extends AbstractController
 {
+
     /**
      * Permet d'afficher le formulaire de réservation
      * @Route("/ads/{slug}/book", name="booking_create")
