@@ -4,6 +4,8 @@
 
 namespace App\Controller;
 
+use App\Repository\AdRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,10 +20,14 @@ class HomeController extends AbstractController {
      * 
      */
     
-     public function home(){
+     public function home(AdRepository $adRepo,UserRepository $userRepo){
 
-        $noms = ['Durand'=>'visiteur','François'=>'admin','Dupont'=>'contributeur'];
-        return $this->render('home.html.twig',['titre'=>'Site d\'annonces !','acces'=>'visiteur','tableau'=>$noms]);
+        
+        return $this->render('home.html.twig',
+                    [
+                        'ads'=>$adRepo->findBestAds(6),
+                        'users'=>$userRepo->findBestUsers()    
+                    ]);
 
     }
 
