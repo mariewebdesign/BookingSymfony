@@ -99,8 +99,8 @@
     "egulias/email-validator": {
         "version": "2.1.24"
     },
-    "fakerphp/faker": {
-        "version": "v1.12.1"
+    "fzaninotto/faker": {
+        "version": "v1.9.2"
     },
     "monolog/monolog": {
         "version": "2.1.1"

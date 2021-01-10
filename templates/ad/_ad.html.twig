@@ -11,6 +11,7 @@
                             <h4 class="card-title mt-3">{{ad.title}}</h4>
                             <p class="card-text">{{ad.introduction}}</p>
                             <a href="{{ url }}" class="btn btn-warning">+ d'infos</a>
+                            <a href="{{path('booking_create',{'slug':ad.slug})}}" class="btn btn-primary">Réserver !</a>
                             {% if app.user and app.user == ad.author %}
                                 <a href="{{ path('ads_edit',{ 'slug':ad.slug }) }}" class="btn btn-info">Modifier</a>
                                 <a href="{{ path('ads_delete',{ 'slug':ad.slug }) }}" class="btn btn-danger" onclick="return confirm(`Etes-vous sûr de vouloir cette annonce ?`)">Supprimer l'annonce</a>
